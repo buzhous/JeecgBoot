@@ -3,6 +3,8 @@ package org.jeecg.modules.airag.llm.handler;
 import com.alibaba.fastjson.JSONObject;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.*;
+import dev.langchain4j.exception.InvalidRequestException;
+import dev.langchain4j.exception.ToolExecutionException;
 import dev.langchain4j.mcp.McpToolProvider;
 import dev.langchain4j.rag.query.router.QueryRouter;
 import dev.langchain4j.service.TokenStream;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jeecg.ai.handler.LLMHandler;
 import org.jeecg.common.exception.JeecgBootException;
 import org.jeecg.common.util.AssertUtils;
+import org.jeecg.common.util.filter.SsrfFileTypeFilter;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.airag.common.consts.AiragConsts;
 import org.jeecg.modules.airag.common.handler.AIChatParams;
@@ -115,6 +118,9 @@ public class AIChatHandler implements IAIChatHandler {
         String resp;
         try {
             resp = llmHandler.completions(messages, params);
+        } catch (ToolExecutionException | InvalidRequestException e) {
+            log.error(e.getMessage(), e);
+            return "";
         } catch (Exception e) {
             // langchain4j 异常友好提示
             String errMsg = "调用大模型接口失败，详情请查看后台日志。";
@@ -132,7 +138,7 @@ public class AIChatHandler implements IAIChatHandler {
                 for (Map.Entry<String, String> entry : MODEL_ERROR_MAP.entrySet()) {
                     String key = entry.getKey();
                     String value = entry.getValue();
-                    if (errMsg.contains(key)) {
+                    if (exceptionMsg.contains(key)) {
                         errMsg = value;
                         break;
                     }
@@ -401,6 +407,7 @@ public class AIChatHandler implements IAIChatHandler {
                 String filePath = uploadpath + File.separator + imageUrl;
                 // 读取文件并转换为 base64 编码字符串
                 try {
+                    SsrfFileTypeFilter.checkPathTraversal(filePath);
                     Path path = Paths.get(filePath);
                     byte[] fileContent = Files.readAllBytes(path);
                     String base64Data = Base64.getEncoder().encodeToString(fileContent);
@@ -409,7 +416,7 @@ public class AIChatHandler implements IAIChatHandler {
                     // 构建 ImageContent 对象
                     imageContents.add(ImageContent.from(base64Data, mimeType));
                 } catch (IOException e) {
-                    log.error("读取文件失败: " + filePath, e);
+                    log.error("读取文件失败: {}", imageUrl, e);
                     throw new RuntimeException("发送消息失败,读取文件异常:" + e.getMessage(), e);
                 }
             }
@@ -452,7 +459,7 @@ public class AIChatHandler implements IAIChatHandler {
                 for (Map.Entry<String, String> entry : MODEL_ERROR_MAP.entrySet()) {
                     String key = entry.getKey();
                     String value = entry.getValue();
-                    if (errMsg.contains(key)) {
+                    if (e.getMessage().contains(key)) {
                         errMsg = value;
                         break;
                     }
@@ -529,12 +536,13 @@ public class AIChatHandler implements IAIChatHandler {
                     } else {
                         // 本地文件
                         String filePath = uploadpath + File.separator + imageUrl;
+                        SsrfFileTypeFilter.checkPathTraversal(filePath);
                         Path path = Paths.get(filePath);
                         fileContent = Files.readAllBytes(path);
                     }
                     originalImageBase64List.add(Base64.getEncoder().encodeToString(fileContent));
                 } catch (Exception e) {
-                    log.error("图片读取失败: " + imageUrl, e);
+                    log.error("图片读取失败: {}", imageUrl, e);
                     throw new JeecgBootException("图片读取失败: " + imageUrl);
                 }
             }
