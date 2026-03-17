@@ -184,6 +184,8 @@ public class ShiroConfig {
         //filterChainDefinitionMap.put("/actuator/**", "anon");
         //测试模块排除
         filterChainDefinitionMap.put("/test/seata/**", "anon");
+        //App接口排除
+        filterChainDefinitionMap.put("/app/**", "anon");
 
         //错误路径排除
         filterChainDefinitionMap.put("/error", "anon");
