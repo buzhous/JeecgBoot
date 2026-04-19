@@ -1,4 +1,4 @@
-[中文](./README.md) | English
+[中文](./README.md) | English | [日本語](./README.ja-JP.md)
 
 ![JEECG](https://jeecgos.oss-cn-beijing.aliyuncs.com/files/logov3.png "JeecgBoot低代码开发平台")
 
