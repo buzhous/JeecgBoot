@@ -1,4 +1,4 @@
-中文 | [English](./README.en-US.md)
+中文 | [English](./README.en-US.md) | [日本語](./README.ja-JP.md)
 
 JeecgBoot AI低代码平台
 ===============
@@ -32,7 +32,7 @@ JeecgBoot 是一款 AI 驱动的低代码开发平台，以"低代码 + 零代�
 
 - `零代码能力:` 国内首个“低代码+零代码”双模驱动的AI智能开发平台！同时支持低代码和零代码; 让开发者用低代码，让业务人员在同一个平台上用零代码！
 
-- `AI驱动开发:` 全新推出AI驱动开发能力，支持一句话生成完整系统，提供零代码模式（一句话搭建系统，无需编写代码）和代码生成模式（基于 jeecg-codegen，自动生成完整代码和建表SQL）两种选择。同时支持一句话自动绘制流程图、设计表单，省去手工绘制繁琐步骤。[B站视频演示](https://www.bilibili.com/video/BV1KKwTzJEbX/) | [技能对比与使用说明](https://help.jeecg.com/java/ai/skills/skill-comparison/)
+- `AI驱动开发:` 全新推出AI驱动开发能力，支持一句话生成完整系统，提供零代码模式（一句话搭建系统，无需编写代码）和代码生成模式（基于 jeecg-codegen，自动生成完整代码和建表SQL）两种选择。同时支持一句话自动绘制流程图、设计表单，省去手工绘制繁琐步骤。[实战视频](https://www.bilibili.com/video/BV1KKwTzJEbX/) | [Skills技能清单](https://help.jeecg.com/java/ai/skills/skill-comparison/)
 
 - `AI智能报表:` JimuReport是一款自主研发的强大开源企业级Web报表工具。它通过零编码的拖拽式操作，赋能用户如同搭积木般轻松构建各类复杂报表，全面满足企业数据可视化与分析需求，助力企业级数据产品的高效打造与应用。
 
@@ -64,9 +64,11 @@ JeecgBoot 全新推出 AI 驱动开发能力，**支持一句话生成完整系�
 - 支持一句话自动绘制流程图，省去手工绘制繁琐步骤
 - 支持一句话自动设计表单，快速完成表单搭建
 
-**视频演示：** [B站观看视频](https://www.bilibili.com/video/BV1KKwTzJEbX/)
+**Skills下载：** [jeecgboot/skills](https://github.com/jeecgboot/skills)
 
-**官方文档：** [技能对比与使用说明](https://help.jeecg.com/java/ai/skills/skill-comparison/)
+**视频教程：** [JeecgBoot+Skills自然语言编程](https://www.bilibili.com/video/BV1KKwTzJEbX/)
+
+**官方文档：** [Skills技能清单](https://help.jeecg.com/java/ai/skills/skill-comparison/)
 
 
 AI Skills 技能清单
