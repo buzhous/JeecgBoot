@@ -7,15 +7,25 @@
 JEECG BOOT AI ローコードプラットフォーム
 ===============
 
-現在のバージョン：3.9.1（リリース日：2026-01-28）
+現在のバージョン：3.9.2（2026-04-30）
 
 
 [![AUR](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/zhangdaiscott/jeecg-boot/blob/master/LICENSE)
 [![](https://img.shields.io/badge/Author-guojusoft-orange.svg)](http://www.jeecg.com)
-[![](https://img.shields.io/badge/version-3.9.1-brightgreen.svg)](https://github.com/zhangdaiscott/jeecg-boot)
+[![](https://img.shields.io/badge/blog-技術ブログ-orange.svg)](https://www.toutiao.com/c/user/token/CiZtC9Gn_yl2qDcTF9Kqhh9LV7tW1cJsdRn2rfFUU5lZy4RJaD4hdBpJCjwAAAAAAAAAAAAAUFvsvy4j57fg5tqwVmxukKxGEhbMl7pE14lY9_YSDq-A26V7xrG3hYuq_Z9y6F3W01oQkIKQDhjDxYPqBCIBA2iiHh0=)
+[![](https://img.shields.io/badge/version-3.9.2-brightgreen.svg)](https://github.com/zhangdaiscott/jeecg-boot)
 [![GitHub stars](https://img.shields.io/github/stars/zhangdaiscott/jeecg-boot.svg?style=social&label=Stars)](https://github.com/zhangdaiscott/jeecg-boot)
 [![GitHub forks](https://img.shields.io/github/forks/zhangdaiscott/jeecg-boot.svg?style=social&label=Fork)](https://github.com/zhangdaiscott/jeecg-boot)
+[![Skills](https://img.shields.io/badge/AI%20Skills-自然言語プログラミング-ff4d4f.svg)](https://jeecg.com/skills)
 
+
+> 🔥 **AI Skills 自然言語プログラミング**：Claude Code と組み合わせ、一文だけでフルスタックコード生成、BPMN フロー作成、フォーム設計、レポートと大画面ダッシュボード生成が可能。JeecgBoot ローコードの全シーンをカバー。
+>
+> - 📦 Skills リポジトリ：**https://github.com/jeecgboot/skills**
+> - 🌐 Skills 公式サイト：**https://jeecg.com/skills**
+> - 📺 デモ動画：[JeecgBoot + Skills 自然言語プログラミング](https://www.bilibili.com/video/BV1KKwTzJEbX/) ｜ 📖 ドキュメント：[Skill 比較表](https://help.jeecg.com/java/ai/skills/skill-comparison/)
+>
+> **Skills でできること：** 一文で CRUD 全コード（フロントエンド + バックエンド + SQL + メニュー権限）生成・Online フォーム / Online レポート / デザイナーフォーム作成・BPMN フロー描画・大画面ダッシュボード構築・JimuReport、ポータル、ミニフローなどを自然言語で生成。
 
 
 プロジェクト紹介
@@ -457,3 +467,23 @@ AIチャットアシスタント
 よろしければ、作者にコーヒーを一杯おごってください ☺
 
 ![](https://static.oschina.net/uploads/img/201903/08155608_0EFX.png)
+
+
+## 免責事項
+
+JeecgBoot は [Apache License 2.0](./LICENSE) の下で公開されています。本ソフトウェアをご利用になる前に、以下の事項を必ずご確認ください：
+
+1. **「現状有姿」での提供**  
+   本ソフトウェアおよび関連ドキュメントは「現状有姿（AS IS）」で提供され、商品性、特定目的への適合性、非侵害性を含め、明示・黙示を問わずいかなる保証も行いません。
+
+2. **自己責任での利用**  
+   ご利用者は、本ソフトウェアがご自身の業務要件を満たすか否かを独自にご評価いただき、ダウンロード・インストール・使用・改変または二次開発に起因するすべてのリスク（データ損失、業務中断、利益損失など一切の損害を含む）を自ら負担するものとします。
+
+3. **責任の制限**  
+   適用法令が認める最大限の範囲において、JeecgBoot の作者、貢献者および著作権者は、本ソフトウェアの使用に起因して利用者または第三者に生じたあらゆる直接的、間接的、偶発的、特別的、懲罰的または結果的損害について、一切の責任を負いません。
+
+4. **コミュニティへのお願い**  
+   Apache License 2.0 に従って本ソフトウェアを自由にご利用・改変・再配布いただけますが、派生作品において JeecgBoot 公式版を直接複製したり、公式版を装ったり、JeecgBoot と極めて類似した名称・ブランドで公開することは、何卒お控えいただきますようお願いいたします。
+
+本ソフトウェアをダウンロード、複製、インストール、またはその他の方法で使用された場合、上記の免責事項を読み、理解し、同意されたものとみなします。
+

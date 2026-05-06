@@ -709,12 +709,20 @@ public class WordUtil {
                     throw new JeecgBootException(e);
                 }
             } else {
+                //update-begin---author:liusq ---date:2026-03-30  for：[issues/9429]【安全漏洞】修复WordUtil.addImage路径遍历漏洞(CWE-22)-----------
                 String uploadPath = SpringContextUtils.getApplicationContext()
                         .getEnvironment()
                         .getProperty("jeecg.path.upload", "");
                 // 将本地图片读取到 InputStream
                 String filePath = uploadPath + File.separator + imageUrl;
-                in = new FileInputStream(filePath);
+                // 路径遍历校验：规范化后确保文件在uploadPath目录内
+                File uploadDir = new File(uploadPath).getCanonicalFile();
+                File targetFile = new File(filePath).getCanonicalFile();
+                if (!targetFile.toPath().startsWith(uploadDir.toPath())) {
+                    throw new JeecgBootException("非法文件路径，禁止访问上传目录之外的文件: " + imageUrl);
+                }
+                in = new FileInputStream(targetFile);
+                //update-end---author:liusq ---date:2026-03-30  for：[issues/9429]【安全漏洞】修复WordUtil.addImage路径遍历漏洞(CWE-22)-----------
             }
             XWPFRun run = paragraph.createRun();
 
