@@ -1,5 +1,5 @@
 <template>
-  <div v-if="parsedText != ''" class="textWrap" :class="[inversion === 'user' ? 'self' : (isOnlyImage ? 'chatgpt-image' : 'chatgpt')]" ref="textRef">
+  <div v-if="parsedText != '' || error" class="textWrap" :class="[inversion === 'user' ? 'self' : (isOnlyImage ? 'chatgpt-image' : 'chatgpt')]" ref="textRef">
     <div v-if="inversion != 'user'" :style="{ width: getIsMobile? screenWidth : 'auto' }">
       <div ref="markdownBodyRef" class="markdown-body" :class="{ 'markdown-body-generate': loading }" v-html="parsedText" />
       <template v-if="showRefKnow">
