@@ -3,6 +3,8 @@
 JeecgBoot AI低代码平台
 ===============
 
+🚀 **低代码迈入 v2.0 时代，一句自然语言即可生成整个系统**
+
 当前最新版本： 3.9.2（2026-04-30） 
 
 
@@ -17,7 +19,7 @@ JeecgBoot AI低代码平台
 
 > 🔥 **AI Skills 自然语言编程全新发布** — 一句话生成完整代码、一句话画流程、一句话设计表单、一句话出报表与大屏，覆盖 JeecgBoot 低代码全场景。
 >
-> 📦 Skills 开源仓库：**https://github.com/jeecgboot/skills** ｜ 🌐 Skills 官网：**https://jeecg.com/skills** ｜ 📺 [实战视频](https://www.bilibili.com/video/BV1KKwTzJEbX/)
+> ⚡ [一键安装](https://help.jeecg.com/java/ai/skills/skill-install) ｜ 📦 [Skills 开源仓库](https://github.com/jeecgboot/skills) ｜ 🌐 [Skills 官网](https://jeecg.com/skills) ｜ 📺 [实战视频](https://www.bilibili.com/video/BV1KKwTzJEbX/)
 
 
 项目介绍
@@ -54,48 +56,18 @@ JeecgBoot 是一款 AI 低代码开发平台，支持 "低代码 + 零代码" �
 
 
 
-🔥 AI Skills 重磅能力（自然语言编程）
+🔥 AI Skills 自然语言编程
 -----------------------------------
 
-> JeecgBoot 全新推出 **AI Skills 自然语言编程**——结合 Claude Code，**一句话即可生成完整系统**，把"想到 → 做到"压缩到一句话之间。
+官方提供 **一键安装 Claude Code + JEECG Skills**，使用 AI 一句话生成代码、表单、流程、报表、大屏。
 
-**🚀 一站式入口**
+👉 **一键安装入口：https://help.jeecg.com/java/ai/skills/skill-install**
 
-| 入口 | 地址 |
+| 资源 | 地址 |
 |------|------|
-| 📦 Skills 开源仓库 | **https://github.com/jeecgboot/skills** |
-| 🌐 Skills 官网首页 | **https://jeecg.com/skills** |
-| 📺 实战视频教程 | [JeecgBoot + Skills 自然语言编程](https://www.bilibili.com/video/BV1KKwTzJEbX/) |
-| 📖 官方使用文档 | [Skills 技能清单详细说明](https://help.jeecg.com/java/ai/skills/skill-comparison/) |
-
-**两种开发模式，灵活选择：**
-
-| 模式 | 说明 |
-|------|------|
-| 零代码模式 | 一句话即可搭建系统，无需编写任何代码 |
-| 代码生成模式 | 基于 jeecg-codegen，自动生成完整代码和建表 SQL |
-
-**Skills 能干什么：**
-- ✅ 一句话生成全套 CRUD 代码（前后端 + SQL + 菜单权限）
-- ✅ 一句话创建 Online 表单 / Online 报表 / 设计器表单
-- ✅ 一句话画流程图（BPMN）、画大屏、画仪表盘
-- ✅ 一句话生成积木报表、知识漫画、门户、简流……
-
-
-AI Skills 技能清单
------------------------------------
-
-结合 Claude Code 的 AI Skills 技能，JeecgBoot 实现了**自然语言驱动的低代码开发**，一句话即可完成从需求到代码/配置的全流程自动化。
-
-👉 **[Skills 仓库](https://github.com/jeecgboot/skills)** ｜ **[Skills 官网](https://jeecg.com/skills)** ｜ [详细文档](https://help.jeecg.com/java/ai/skills/skill-comparison/)
-
-| Skill | 技能 | 功能介绍 | 是否需要写代码 |
-|-------|------|----------|---------------|
-| `jeecg-codegen` | AI一句话生成全套代码 | 自然语言需求自动转换为 JeecgBoot 全套 CRUD 代码，包括后端 Java 代码 + 前端 Vue3 代码 + 建表 SQL + 菜单权限 SQL，支持无表生成，甚至生成一套系统全代码 | 否（AI 自动生成源码） |
-| `jeecg-onlform` | AI一句话创建 Online 表单 | 自然语言需求自动转换为 JeecgBoot Online 表单，完成从表单配置 → 同步数据库 → 生成菜单 SQL 的全流程自动化 | 否 |
-| `jeecg-onlreport` | AI一句话创建 Online 报表 | 将自然语言需求自动转换为 JeecgBoot Online 报表，完成从 SQL 编写 → 字段解析 → 报表配置 → 创建报表的全流程自动化 | 否 |
-| `jeecg-desform` | AI一句话画表单 | 自然语言的表单需求描述自动转换为 JeecgBoot 的设计器表单，完成从需求解析 → JSON 生成 → API 创建的全流程自动化，甚至可以创建一套系统 | 否 |
-| `jeecg-bpmn` | AI一句话画流程 | 将自然语言的审批流程描述自动转换为 Flowable BPMN 2.0 XML，并通过 API 在 JeecgBoot 系统中自动创建流程 | 否 |
+| 📦 Skills 开源仓库 | https://github.com/jeecgboot/skills |
+| 🌐 Skills 官网 | https://jeecg.com/skills |
+| 📺 实战视频 | [自然语言编程实战](https://www.bilibili.com/video/BV1KKwTzJEbX/) |
 
 
 适用项目
