@@ -87,9 +87,6 @@ public class ItemSync implements Serializable {
     @Schema(description = "标签列表")
     private String tags;
 
-    @Schema(description = "队列Id")
-    private String queueId;
-
     @Schema(description = "版本")
     private Integer version;
 

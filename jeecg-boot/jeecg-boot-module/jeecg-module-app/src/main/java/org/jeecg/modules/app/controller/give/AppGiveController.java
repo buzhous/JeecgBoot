@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "赠送物品")
 @RestController
 @RequestMapping("/app/give")
 public class AppGiveController {
@@ -45,7 +44,6 @@ public class AppGiveController {
     @Autowired
     private IUserGiveRecordService iUserGiveRecordService;
 
-    @Operation(summary = "查找用户")
     @GetMapping(value = "/findUsers")
     public Result<List<UserInfoVO>> square(@RequestParam(required = false) String username) {
         AppUser loginUser = AppAuthUtil.getUserInfo();
@@ -66,7 +64,6 @@ public class AppGiveController {
         return Result.OK(listUsers);
     }
 
-    @Operation(summary = "赠送指定用户")
     @PostMapping(value = "/giveUser")
     public Result<?> giveUser(@RequestBody ItemGiveVO itemGiveVO) {
         // 检查当前登录用户

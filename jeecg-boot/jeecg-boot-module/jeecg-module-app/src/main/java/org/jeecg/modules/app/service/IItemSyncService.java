@@ -20,14 +20,6 @@ public interface IItemSyncService extends IService<ItemSync> {
     ItemSync getItemSyncByItemId(String itemId);
 
     /**
-     * 根据queueId查询物品同步记录
-     *
-     * @param queueId 队列ID
-     * @return 物品同步记录
-     */
-    ItemSync getItemSyncByQueueId(String queueId);
-
-    /**
      * 根据oriId查询物品同步记录
      *
      * @param oriId 原始物品ID
@@ -100,5 +92,13 @@ public interface IItemSyncService extends IService<ItemSync> {
      * 从销毁物品记录同步物品
      */
     boolean syncFromRuins(ItemSyncReqVO syncVO);
+
+    /**
+     * 批量同步上传
+     *
+     * @param batchVO 批量同步请求
+     * @return 批量同步响应
+     */
+    org.jeecg.modules.app.bean.vo.queue.BatchItemSyncRspVO batchSyncUpload(org.jeecg.modules.app.bean.vo.queue.BatchItemSyncReqVO batchVO);
 
 }

@@ -1,0 +1,1 @@
+ALTER TABLE `tbl_item_gift` ADD COLUMN `inventory_id` varchar(64) DEFAULT NULL COMMENT '库存ID' AFTER `ori_id`;

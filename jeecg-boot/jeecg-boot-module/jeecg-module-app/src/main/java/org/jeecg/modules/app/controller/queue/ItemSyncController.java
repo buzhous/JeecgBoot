@@ -113,7 +113,7 @@ public class ItemSyncController extends JeecgController<ItemSync, IItemSyncServi
         // 设置用户ID
         syncReqVO.setUserId(loginUser.getId());
         boolean result = false;
-        switch (SyncOpsEnum.valueOf(syncReqVO.getSyncOps())) {
+        switch (SyncOpsEnum.fromCode(syncReqVO.getSyncOps())) {
             case ADD:
                 result = itemSyncService.syncUploadAdd(syncReqVO);
                 if (!result) {
@@ -138,8 +138,8 @@ public class ItemSyncController extends JeecgController<ItemSync, IItemSyncServi
         ItemSyncRspVO rspVO = new ItemSyncRspVO();
         rspVO.setOriId(syncReqVO.getOriId());
         rspVO.setItemId(syncReqVO.getItemId());
+        rspVO.setInventoryId(syncReqVO.getInventoryId());
         rspVO.setSyncStatus(syncReqVO.getSyncStatus());
-        rspVO.setQueueId(syncReqVO.getQueueId());
         rspVO.setVersion(syncReqVO.getVersion());
         return Result.OK(rspVO);
     }
@@ -164,7 +164,6 @@ public class ItemSyncController extends JeecgController<ItemSync, IItemSyncServi
         rspVO.setOriId(syncReqVO.getOriId());
         rspVO.setItemId(syncReqVO.getItemId());
         rspVO.setSyncStatus(syncReqVO.getSyncStatus());
-        rspVO.setQueueId(syncReqVO.getQueueId());
         rspVO.setVersion(syncReqVO.getVersion());
         return Result.OK(rspVO);
     }
@@ -179,6 +178,28 @@ public class ItemSyncController extends JeecgController<ItemSync, IItemSyncServi
         syncVO.setUserId(loginUser.getId());
         ItemSyncDownloadRspVO downloadRspVO = itemSyncService.syncDownload(syncVO);
         return Result.OK(downloadRspVO);
+    }
+
+    @Operation(summary = "批量同步上传")
+    @PostMapping("/batch/upload")
+    public Result<BatchItemSyncRspVO> batchSyncUpload(@RequestBody BatchItemSyncReqVO batchVO) {
+        AppUser loginUser = AppAuthUtil.getUserInfo();
+        if (ObjectUtil.isEmpty(loginUser)) {
+            return Result.error(ExceptionEnum.USER_INFO_NOT_EXIST.getMsg());
+        }
+        if (StrUtil.isEmpty(batchVO.getSyncOps())) {
+            return Result.error(ExceptionEnum.REQUEST_PARAM_ERROR.getMsg());
+        }
+        if (ObjectUtil.isEmpty(batchVO.getItems())) {
+            return Result.error("物品列表不能为空");
+        }
+        
+        for (ItemSyncReqVO itemVO : batchVO.getItems()) {
+            itemVO.setUserId(loginUser.getId());
+        }
+        
+        BatchItemSyncRspVO result = itemSyncService.batchSyncUpload(batchVO);
+        return Result.OK(result);
     }
 
 }

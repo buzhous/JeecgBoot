@@ -23,8 +23,8 @@ public class ItemSyncRspVO implements Serializable {
     @Schema(description = "物品Id")
     private String itemId;
 
-    @Schema(description = "队列Id")
-    private String queueId;
+    @Schema(description = "库存Id")
+    private String inventoryId;
 
     @Schema(description = "版本")
     private Integer version;

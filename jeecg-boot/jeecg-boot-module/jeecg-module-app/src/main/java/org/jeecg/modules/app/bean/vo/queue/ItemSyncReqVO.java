@@ -31,6 +31,9 @@ public class ItemSyncReqVO implements Serializable {
     @Schema(description = "物品ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String itemId;
 
+    @Schema(description = "库存ID")
+    private String inventoryId;
+
     @Schema(description = "用户ID")
     private String userId;
 
@@ -69,9 +72,6 @@ public class ItemSyncReqVO implements Serializable {
 
     @Schema(description = "扩展VO")
     private ExtendDataVO extendData;
-
-    @Schema(description = "队列ID")
-    private String queueId;
 
     @Schema(description = "版本")
     private Integer version;

@@ -25,6 +25,17 @@ public enum ExceptionEnum {
     // 物品 10200-10500
     ITEM_NOT_EXIST(10200, "物品不存在"),
     ITEM_DESTROYED(10201, "物品已被销毁"),
+    INSUFFICIENT_QUANTITY(10202, "物品数量不足"),
+    // 赠送 10600-10700
+    GIFT_NOT_EXIST(10600, "赠送记录不存在"),
+    GIFT_CANCELLED(10601, "赠送已撤回"),
+    GIFT_EXPIRED(10602, "赠送已过期"),
+    GIFT_RECEIVED(10603, "赠送已领完"),
+    GIFT_NOT_BELONG_TO_USER(10604, "赠送不属于当前用户"),
+    GIFT_PER_LIMIT_EXCEEDED(10605, "已达到每人限领数量"),
+    GIFT_INSUFFICIENT_QUANTITY(10606, "赠送剩余数量不足"),
+    GIFT_ALREADY_CANCELLED(10607, "赠送已撤回"),
+    GIFT_ALREADY_RECEIVED(10608, "赠送已领完"),
     // 优惠券 10500-10600
     COUPON_NOT_EXIST(10500, "优惠券不存在"),
     COUPON_ALREADY_PUBLISHED(10501, "优惠券已发布"),
