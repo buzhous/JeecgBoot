@@ -1,5 +1,6 @@
 package org.jeecg.modules.app.controller.fields;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Tag(name = "媒体管理")
 @Slf4j
@@ -46,9 +50,10 @@ public class AppMediaController {
             }
             // 返回阿里云原生域名前缀URL
             String urlOss = OssBootUtil.getOriginalUrl(url);
-
-
-            return Result.OK();
+            Map<String, Object> map = new HashMap<>();
+            map.put("url", urlOss);
+            map.put("id", IdUtil.getSnowflakeNextIdStr());
+            return Result.OK(map);
         } catch (Exception ex) {
             log.info(ex.getMessage(), ex);
             result.error500("上传失败");
