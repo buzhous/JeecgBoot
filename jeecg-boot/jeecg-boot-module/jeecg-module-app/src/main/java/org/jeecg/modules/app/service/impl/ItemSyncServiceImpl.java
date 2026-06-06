@@ -153,74 +153,74 @@ public class ItemSyncServiceImpl extends ServiceImpl<ItemSyncMapper, ItemSync> i
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean syncUploadAdd(ItemSyncReqVO syncReqVO) {
-        // 根据itemId、oriId更新同步状态
-        ItemSync itemSyncExist = this.queryItemSyncByItemId(syncReqVO.getItemId(), syncReqVO.getOriId(), syncReqVO.getUserId());
-        if (ObjectUtil.isEmpty(itemSyncExist)) {
-            throw new AppException(ExceptionEnum.ITEM_NOT_EXIST);
-        }
-        if (itemSyncExist.getStatus().equals(SyncStatusEnum.DESTROYED.getCode())) {
-            throw new AppException(ExceptionEnum.ITEM_DESTROYED);
-        }
+        ItemSync itemSyncExist = validateAndGetItemSync(syncReqVO);
+        
         ItemSync itemSync = FieldElementUtil.convertObject(syncReqVO, new ItemSync());
-        itemSync.setSyncStatus(SyncStatusEnum.SUCCESS.getCode());
-        itemSync.setVersion(itemSyncExist.getVersion() + 1);
-        syncReqVO.setSyncStatus(SyncStatusEnum.SUCCESS.getCode());
-        syncReqVO.setVersion(itemSyncExist.getVersion() + 1);
-        itemSync.setId(itemSyncExist.getId());
-        // 更新物品同步信息
-        boolean result = this.updateById(itemSync);
-        if (result) {
-            // 更新线上物品
-            ItemInfoCreateVO itemInfoCreateVO = FieldElementUtil.convertObject(itemSync, new ItemInfoCreateVO());
-            itemInfoService.updateItemInfo(itemInfoCreateVO);
-            // 更新线上用户物品库存
-            ItemInventoryVO itemInventoryVO = FieldElementUtil.convertObject(itemSync, new ItemInventoryVO());
-            itemUserInventoryService.updateItemUserInventory(itemInventoryVO);
-        }
-        return result;
+        return updateItemSyncAndRelated(itemSyncExist, itemSync, syncReqVO);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean syncUploadEdit(ItemSyncReqVO syncReqVO) {
-        // 根据itemId、oriId更新同步状态
-        ItemSync itemSyncExist = this.queryItemSyncByItemId(syncReqVO.getItemId(), syncReqVO.getOriId(), syncReqVO.getUserId());
+        ItemSync itemSyncExist = validateAndGetItemSync(syncReqVO);
+        
+        ItemSync itemSync = FieldElementUtil.convertToJsonFields(syncReqVO, new ItemSync());
+        return updateItemSyncAndRelated(itemSyncExist, itemSync, syncReqVO);
+    }
+
+    private ItemSync validateAndGetItemSync(ItemSyncReqVO syncReqVO) {
+        if (ObjectUtil.isEmpty(syncReqVO.getItemId()) || 
+            ObjectUtil.isEmpty(syncReqVO.getOriId()) || 
+            ObjectUtil.isEmpty(syncReqVO.getUserId())) {
+            throw new AppException(ExceptionEnum.REQUEST_PARAM_ERROR);
+        }
+
+        ItemSync itemSyncExist = this.queryItemSyncByItemId(
+            syncReqVO.getItemId(), 
+            syncReqVO.getOriId(), 
+            syncReqVO.getUserId()
+        );
+
         if (ObjectUtil.isEmpty(itemSyncExist)) {
             throw new AppException(ExceptionEnum.ITEM_NOT_EXIST);
         }
-        if (itemSyncExist.getStatus().equals(SyncStatusEnum.DESTROYED.getCode())) {
+
+        if (SyncStatusEnum.DESTROYED.getCode() == itemSyncExist.getStatus()) {
             throw new AppException(ExceptionEnum.ITEM_DESTROYED);
         }
-        ItemSync itemSync = FieldElementUtil.convertToJsonFields(syncReqVO, new ItemSync());
-        itemSync.setSyncStatus(SyncStatusEnum.SUCCESS.getCode());
-        itemSync.setVersion(itemSyncExist.getVersion() + 1);
-        syncReqVO.setSyncStatus(SyncStatusEnum.SUCCESS.getCode());
-        syncReqVO.setVersion(itemSyncExist.getVersion() + 1);
+
+        return itemSyncExist;
+    }
+
+    private boolean updateItemSyncAndRelated(ItemSync itemSyncExist, ItemSync itemSync, ItemSyncReqVO syncReqVO) {
+        int newVersion = itemSyncExist.getVersion() + 1;
+
         itemSync.setId(itemSyncExist.getId());
-        // 更新物品同步信息
+        itemSync.setSyncStatus(SyncStatusEnum.SUCCESS.getCode());
+        itemSync.setVersion(newVersion);
+        itemSync.setUserId(itemSyncExist.getUserId());
+        itemSync.setItemId(itemSyncExist.getItemId());
+
         boolean result = this.updateById(itemSync);
+        
         if (result) {
-            // 更新线上物品
             ItemInfoCreateVO itemInfoCreateVO = FieldElementUtil.convertObject(itemSync, new ItemInfoCreateVO());
             itemInfoService.updateItemInfo(itemInfoCreateVO);
-            // 更新线上用户物品库存
+
             ItemInventoryVO itemInventoryVO = FieldElementUtil.convertObject(itemSync, new ItemInventoryVO());
             itemUserInventoryService.updateItemUserInventory(itemInventoryVO);
+
+            syncReqVO.setSyncStatus(SyncStatusEnum.SUCCESS.getCode());
+            syncReqVO.setVersion(newVersion);
         }
+
         return result;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean syncDestroy(ItemSyncReqVO syncVO) {
-        ItemSync itemSyncExist = this.queryItemSyncByItemId(syncVO.getItemId(),
-                syncVO.getOriId(), syncVO.getUserId());
-        if (ObjectUtil.isEmpty(itemSyncExist)) {
-            throw new AppException(ExceptionEnum.ITEM_NOT_EXIST);
-        }
-        if (itemSyncExist.getStatus().equals(SyncStatusEnum.DESTROYED.getCode())) {
-            throw new AppException(ExceptionEnum.ITEM_DESTROYED);
-        }
+        ItemSync itemSyncExist = validateAndGetItemSync(syncVO);
 
         ItemUserInventory inventory = itemUserInventoryService.queryUserItem(syncVO.getUserId(), syncVO.getItemId());
         if (ObjectUtil.isEmpty(inventory)) {
@@ -235,25 +235,34 @@ public class ItemSyncServiceImpl extends ServiceImpl<ItemSyncMapper, ItemSync> i
         }
 
         if (destroyQuantity >= inventoryQuantity) {
-            ItemSync itemSyncUpdate = new ItemSync();
-            itemSyncUpdate.setId(itemSyncExist.getId());
-            itemSyncUpdate.setStatus(SyncStatusEnum.DESTROYED.getCode());
-            itemSyncUpdate.setVersion(syncVO.getVersion());
-            this.updateById(itemSyncUpdate);
-
-            return itemRuinsService.dropToRuins(itemSyncExist);
+            return destroyItemCompletely(itemSyncExist, syncVO.getVersion());
         } else {
-            inventory.setQuantity(inventoryQuantity - destroyQuantity);
-            itemUserInventoryService.updateItemById(inventory);
-
-            ItemSync itemSyncUpdate = new ItemSync();
-            itemSyncUpdate.setId(itemSyncExist.getId());
-            itemSyncUpdate.setQuantity(destroyQuantity);
-            itemSyncUpdate.setVersion(syncVO.getVersion());
-            this.updateById(itemSyncUpdate);
-
-            return true;
+            return destroyPartialQuantity(itemSyncExist, inventory, inventoryQuantity, destroyQuantity, syncVO.getVersion());
         }
+    }
+
+    private boolean destroyItemCompletely(ItemSync itemSyncExist, Integer version) {
+        ItemSync itemSyncUpdate = new ItemSync();
+        itemSyncUpdate.setId(itemSyncExist.getId());
+        itemSyncUpdate.setStatus(SyncStatusEnum.DESTROYED.getCode());
+        itemSyncUpdate.setVersion(version);
+        this.updateById(itemSyncUpdate);
+
+        return itemRuinsService.dropToRuins(itemSyncExist);
+    }
+
+    private boolean destroyPartialQuantity(ItemSync itemSyncExist, ItemUserInventory inventory, 
+                                           int inventoryQuantity, int destroyQuantity, Integer version) {
+        inventory.setQuantity(inventoryQuantity - destroyQuantity);
+        itemUserInventoryService.updateItemById(inventory);
+
+        ItemSync itemSyncUpdate = new ItemSync();
+        itemSyncUpdate.setId(itemSyncExist.getId());
+        itemSyncUpdate.setQuantity(destroyQuantity);
+        itemSyncUpdate.setVersion(version);
+        this.updateById(itemSyncUpdate);
+
+        return true;
     }
 
     @Override
