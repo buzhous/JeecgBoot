@@ -13,13 +13,7 @@ import org.jeecg.modules.app.bean.enums.SyncStatusEnum;
 import org.jeecg.modules.app.bean.exception.AppException;
 import org.jeecg.modules.app.bean.vo.inventory.ItemInventoryVO;
 import org.jeecg.modules.app.bean.vo.item.ItemInfoCreateVO;
-import org.jeecg.modules.app.bean.vo.queue.BatchItemSyncReqVO;
-import org.jeecg.modules.app.bean.vo.queue.BatchItemSyncRspVO;
-import org.jeecg.modules.app.bean.vo.queue.ItemSyncDownloadReqVO;
-import org.jeecg.modules.app.bean.vo.queue.ItemSyncDownloadRspVO;
-import org.jeecg.modules.app.bean.vo.queue.ItemSyncReqVO;
-import org.jeecg.modules.app.bean.vo.queue.ItemSyncRspVO;
-import org.jeecg.modules.app.bean.vo.queue.MakeSyncIdReqVO;
+import org.jeecg.modules.app.bean.vo.queue.*;
 import org.jeecg.modules.app.entity.ItemSync;
 import org.jeecg.modules.app.entity.ItemUserInventory;
 import org.jeecg.modules.app.mapper.ItemSyncMapper;
@@ -32,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class ItemSyncServiceImpl extends ServiceImpl<ItemSyncMapper, ItemSync> implements IItemSyncService {
@@ -269,13 +265,62 @@ public class ItemSyncServiceImpl extends ServiceImpl<ItemSyncMapper, ItemSync> i
         LambdaQueryWrapper<ItemSync> queryWrapper = new QueryWrapper<ItemSync>().lambda();
         queryWrapper.eq(ItemSync::getItemId, itemSync.getItemId());
         queryWrapper.eq(ItemSync::getOriId, itemSync.getOriId());
+        queryWrapper.eq(ItemSync::getInventoryId, itemSync.getInventoryId());
         queryWrapper.eq(ItemSync::getUserId, syncVO.getUserId());
         queryWrapper.last("limit 1");
         ItemSync itemSyncExist = this.getOne(queryWrapper);
         if (ObjectUtil.isEmpty(itemSyncExist)) {
             throw new AppException(ExceptionEnum.ITEM_NOT_EXIST);
         }
-        return ItemSyncDownloadRspVO.convertToVO(itemSyncExist);
+        ItemSyncDownloadRspVO rspVO = new ItemSyncDownloadRspVO();
+        BeanUtil.copyProperties(itemSyncExist, rspVO);
+        return rspVO;
+    }
+
+    @Override
+    public ItemSyncDownloadIncrementalRspVO syncDownloadIncremental(ItemSyncDownloadReqVO syncVO) {
+        Long lastSyncTime = syncVO.getLastSyncTime();
+        Date now = new Date();
+
+        LambdaQueryWrapper<ItemSync> queryWrapper = new QueryWrapper<ItemSync>().lambda();
+        queryWrapper.eq(ItemSync::getUserId, syncVO.getUserId());
+
+        if (ObjectUtil.isNotEmpty(lastSyncTime) && lastSyncTime > 0) {
+            Date syncDate = new Date(lastSyncTime);
+            queryWrapper.gt(ItemSync::getUpdateTime, syncDate);
+        }
+
+        queryWrapper.orderByAsc(ItemSync::getUpdateTime);
+
+        List<ItemSync> allChangedItems = this.list(queryWrapper);
+
+        List<ItemSync> needAddOrUpdateList = new ArrayList<>();
+        List<String> needDeleteList = new ArrayList<>();
+
+        for (ItemSync item : allChangedItems) {
+            if (item.getStatus() != null && item.getStatus() == 3) {
+                needDeleteList.add(item.getItemId());
+            } else {
+                needAddOrUpdateList.add(item);
+            }
+        }
+
+        ItemSyncDownloadIncrementalRspVO rspVO = new ItemSyncDownloadIncrementalRspVO();
+        rspVO.setServerTime(now.getTime());
+
+        if (ObjectUtil.isEmpty(lastSyncTime) || lastSyncTime <= 0) {
+            rspVO.setNeedAddList(needAddOrUpdateList);
+            rspVO.setNeedUpdateList(new ArrayList<>());
+        } else {
+            rspVO.setNeedAddList(new ArrayList<>());
+            rspVO.setNeedUpdateList(needAddOrUpdateList);
+        }
+
+        rspVO.setNeedDeleteList(needDeleteList);
+        rspVO.setTotalCount(needAddOrUpdateList.size() + needDeleteList.size());
+        rspVO.setHasMore(false);
+
+        return rspVO;
     }
 
     @Override

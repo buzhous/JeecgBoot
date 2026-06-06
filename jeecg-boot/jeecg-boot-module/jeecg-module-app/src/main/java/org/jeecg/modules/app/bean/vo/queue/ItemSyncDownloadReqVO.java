@@ -17,22 +17,19 @@ public class ItemSyncDownloadReqVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "原始Id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "原始Id")
     private String oriId;
 
-    @Schema(description = "物品Id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "物品Id")
     private String itemId;
 
-    @Schema(description = "队列Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String queueId;
-
-    @Schema(description = "版本", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String version;
-
-    @Schema(description = "同步状态（内部）")
-    private Integer syncStatus;
+    @Schema(description = "库存Id")
+    private String inventoryId;
 
     @Schema(description = "用户ID（内部）")
     private String userId;
+
+    @Schema(description = "最后同步时间戳（增量同步用，毫秒）")
+    private Long lastSyncTime;
 
 }

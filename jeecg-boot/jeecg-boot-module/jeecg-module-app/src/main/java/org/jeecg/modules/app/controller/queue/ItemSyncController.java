@@ -168,7 +168,7 @@ public class ItemSyncController extends JeecgController<ItemSync, IItemSyncServi
         return Result.OK(rspVO);
     }
 
-    @Operation(summary = "同步下载")
+    @Operation(summary = "同步下载（单个）")
     @PostMapping("/download")
     public Result<ItemSyncDownloadRspVO> syncDownload(@RequestBody ItemSyncDownloadReqVO syncVO) {
         AppUser loginUser = AppAuthUtil.getUserInfo();
@@ -177,6 +177,18 @@ public class ItemSyncController extends JeecgController<ItemSync, IItemSyncServi
         }
         syncVO.setUserId(loginUser.getId());
         ItemSyncDownloadRspVO downloadRspVO = itemSyncService.syncDownload(syncVO);
+        return Result.OK(downloadRspVO);
+    }
+
+    @Operation(summary = "增量同步下载（基于时间戳）")
+    @PostMapping("/download/incremental")
+    public Result<ItemSyncDownloadIncrementalRspVO> syncDownloadIncremental(@RequestBody ItemSyncDownloadReqVO syncVO) {
+        AppUser loginUser = AppAuthUtil.getUserInfo();
+        if (ObjectUtil.isEmpty(loginUser)) {
+            return Result.error(ExceptionEnum.USER_INFO_NOT_EXIST.getMsg());
+        }
+        syncVO.setUserId(loginUser.getId());
+        ItemSyncDownloadIncrementalRspVO downloadRspVO = itemSyncService.syncDownloadIncremental(syncVO);
         return Result.OK(downloadRspVO);
     }
 

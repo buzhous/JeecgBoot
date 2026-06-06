@@ -1,10 +1,7 @@
 package org.jeecg.modules.app.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.jeecg.modules.app.bean.vo.queue.ItemSyncDownloadReqVO;
-import org.jeecg.modules.app.bean.vo.queue.ItemSyncDownloadRspVO;
-import org.jeecg.modules.app.bean.vo.queue.ItemSyncReqVO;
-import org.jeecg.modules.app.bean.vo.queue.MakeSyncIdReqVO;
+import org.jeecg.modules.app.bean.vo.queue.*;
 import org.jeecg.modules.app.entity.ItemSync;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,9 +81,17 @@ public interface IItemSyncService extends IService<ItemSync> {
     ItemSync queryItemSyncByItemId(String itemId, String oriId, String userId);
 
     /**
-     * 获取下载物品数据
+     * 获取下载物品数据（单个）
      */
     ItemSyncDownloadRspVO syncDownload(ItemSyncDownloadReqVO syncVO);
+
+    /**
+     * 增量同步下载（基于时间戳）
+     *
+     * @param syncVO 下载请求（包含lastSyncTime）
+     * @return 下载响应（包含需要新增/更新/删除的物品）
+     */
+    ItemSyncDownloadIncrementalRspVO syncDownloadIncremental(ItemSyncDownloadReqVO syncVO);
 
     /**
      * 从销毁物品记录同步物品
