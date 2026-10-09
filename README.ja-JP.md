@@ -7,15 +7,13 @@
 JEECG BOOT AI ローコードプラットフォーム
 ===============
 
-🚀 **ローコードは v2.0 時代へ — 自然言語の一文だけでシステム全体を生成**
-
-現在のバージョン：3.9.2（2026-04-30）
+現在のバージョン：3.9.5（2026-08-27）
 
 
 [![AUR](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/zhangdaiscott/jeecg-boot/blob/master/LICENSE)
 [![](https://img.shields.io/badge/Author-guojusoft-orange.svg)](http://www.jeecg.com)
 [![](https://img.shields.io/badge/blog-技術ブログ-orange.svg)](https://www.toutiao.com/c/user/token/CiZtC9Gn_yl2qDcTF9Kqhh9LV7tW1cJsdRn2rfFUU5lZy4RJaD4hdBpJCjwAAAAAAAAAAAAAUFvsvy4j57fg5tqwVmxukKxGEhbMl7pE14lY9_YSDq-A26V7xrG3hYuq_Z9y6F3W01oQkIKQDhjDxYPqBCIBA2iiHh0=)
-[![](https://img.shields.io/badge/version-3.9.2-brightgreen.svg)](https://github.com/zhangdaiscott/jeecg-boot)
+[![](https://img.shields.io/badge/version-3.9.5-brightgreen.svg)](https://github.com/jeecgboot/JeecgBoot)
 [![GitHub stars](https://img.shields.io/github/stars/zhangdaiscott/jeecg-boot.svg?style=social&label=Stars)](https://github.com/zhangdaiscott/jeecg-boot)
 [![GitHub forks](https://img.shields.io/github/forks/zhangdaiscott/jeecg-boot.svg?style=social&label=Fork)](https://github.com/zhangdaiscott/jeecg-boot)
 [![Skills](https://img.shields.io/badge/AI%20Skills-自然言語プログラミング-ff4d4f.svg)](https://jeecg.com/skills)
@@ -33,18 +31,28 @@ JEECG BOOT AI ローコードプラットフォーム
 プロジェクト紹介
 -----------------------------------
 
-<h3 align="center">Java AI ローコードプラットフォーム</h3>
+<h3 align="center">企業向け AI ローコード開発プラットフォーム</h3>
 
-JeecgBootは、コード`ジェネレーター`を基盤とした`AIローコードプラットフォーム`です！フロントエンドとバックエンドの分離アーキテクチャとして、SpringBoot2.x、SpringCloud、Ant Design & Vue、Mybatis Plus、Shiro、JWTを採用し、マイクロサービスに対応しています。強力なコードジェネレーターにより、フロントエンドとバックエンドのコードを自動生成し、ローコード開発を実現します！JeecgBootは新しいローコード開発パラダイム（OnlineCoding → コードジェネレーター → 手動マージ）を提唱し、Javaプロジェクトにおける70%の重複作業を解消することで、開発をよりビジネスに集中させます。開発効率を迅速に向上させ、研究開発コストを削減するだけでなく、柔軟性も損ないません！
+JeecgBoot は、**ローコード開発、AI アプリケーションプラットフォーム、AI ナレッジベース**を中核とする AI ローコード開発プラットフォームです。AI Skills 自然言語プログラミングの登場により、プラットフォームはローコード v2.0 へ進化しました。開発者は一文の自然言語からシステム全体または業務モジュールを生成でき、AI がフロントエンドとバックエンドのコード、データベース DDL、メニュー権限を自動生成するため、そのまま実行・拡張できます。企業向け AI アプリケーションやインテリジェントなナレッジベースも迅速に構築でき、チームはコア業務に集中できます。
 
-JeecgBootは、オンライン開発を真のゼロコードにするための一連のローコードモジュールを提供します：オンラインフォーム開発、オンラインレポート、レポート設定機能、オンラインチャート設計、大画面設計、モバイル設定機能、フォームデザイナー、オンラインフロー設計、プロセス自動化設定、プラグイン機能（プラグ可能）など！
+AI チャットアシスタント、ナレッジベース、ビジュアルフロー編成、MCP、プラグインなど、AI アプリケーション開発に必要な機能を一体化し、ChatGPT、DeepSeek、Ollama などの主要モデルに対応しています。
 
+JeecgBoot は、**「AI 生成 → オンライン設定 → コード生成 → 手動マージ」**という AI ローコード開発方式を提唱しています。Java プロジェクトにおける反復作業の 80% を削減しながら、ソースコードレベルの拡張性を維持し、開発効率と複雑な業務に必要な柔軟性を両立します。
 
-JEECGの目的は：シンプルな機能はOnlineCodingの設定で実装し、ゼロコード開発を実現すること。複雑な機能はコードジェネレーターで生成し、手動マージすることでローコード開発を実現し、インテリジェンスと柔軟性の両方を確保します。ローコード開発を実現しつつ、柔軟なコーディングもサポートし、現在のローコード製品に共通する柔軟性の欠如という欠点を解消しています！
+フロントエンドとバックエンドを分離した最新の技術構成を採用し、フロントエンドは Ant Design Vue、Vue 3、TypeScript、Vite、バックエンドは Spring Boot 4、Spring Cloud Alibaba、MyBatis-Plus をベースとしています。ボタン権限やデータ権限を細かく制御でき、オンラインフォーム、フォーム・フロー設計、ポータル、レポート・大画面、OA、AI アプリケーション、AI ナレッジベース、モデル管理、AI フロー編成、AI チャットなど、企業システムに必要な機能を幅広く提供します。
 
-JEECGのビジネスプロセス：ワークフローを使用してタスクインターフェースを実装・拡張し、ビジネスロジックを開発・記述します。フォームは複数のソリューションを提供：フォームデザイナー、オンライン設定フォーム、コーディングフォーム。同時に、プロセスとフォームの分離設計（疎結合）を実現し、タスクノードの柔軟な設定をサポートすることで、企業のプロセスの機密性を確保しつつ、開発者の作業負荷を軽減します。
+### 中核機能
 
-AIによるローコードの強化：現在、JeecgBootはChatGPTやDeepSeekなどのAI大規模言語モデルに対応しています。最新バージョンではデフォルトでDeepSeekを使用しており、より高速かつ高品質です。AIチャットアシスタント、AIテーブル作成、AIレポート生成などの機能を提供しています。
+- **一文でシステム全体を生成：** 自然言語で要件を記述するだけで、AI がデータベース設計、フルスタック CRUD コード、メニュー権限、画面生成までを自動化します。
+- **ノーコードモード：** コードを書かずに、最短 5 分で完全な業務システムをオンライン構築でき、業務担当者もデジタル化に直接参加できます。
+- **AI アプリケーションプラットフォーム：** AI アプリケーションとモデルの管理、インテリジェントチャット、ビジュアルフロー、MCP、プラグインを統合し、複数の主要モデルに対応します。
+- **強力なコードジェネレーター：** 単一テーブル、ツリー、1 対 1、1 対多などのデータモデルから、実行可能なフロントエンド・バックエンドコード、DDL、メニュー権限を一括生成し、自由にカスタマイズできます。
+- **豊富な AI Skills：** 実際の業務シーン向けに Skills をパッケージ化し、Claude Code と連携して BPMN フロー、フォーム、レポート、大画面、ポータルを一文から作成できます。
+- **豊富なローコードコンポーネント：** フォーム設計、フロー設計、ポータル、レポート、大画面、OA、AI アプリケーション、AI ナレッジベースをカバーし、企業アプリケーションを迅速に組み立てられます。
+- **最新の技術スタック：** バックエンドの Spring Boot、Spring Cloud Alibaba、MyBatis-Plus と、フロントエンドの Vue 3、TypeScript、Vite、Ant Design Vue を組み合わせ、学習しやすさと長期保守性を両立します。
+- **AI ナレッジベース Q&A：** 大規模言語モデルと RAG を活用し、文書解析、ベクトルデータベース連携、高精度検索に対応したリッチなナレッジベースとインテリジェントチャットを提供します。
+
+さらに、ユーザー、ロール、組織、メニュー、辞書、メッセージ、スケジュールタスクなどの企業向け基盤機能を内蔵しています。ボタン、データ、フォーム項目単位のきめ細かな権限制御、BPM ワークフロー、JimuReport、JimuBI を統合し、モノリスとマイクロサービスの両方に対応します。OA、ERP、CRM、MIS、SaaS、マルチテナント、業界特化型システムに適用できます。
 
 技術サポート
 -----------------------------------
@@ -97,7 +105,7 @@ JeecgBoot AIローコードプラットフォームは、あらゆるJ2EEプロ�
 - デモ：[オンラインデモ](http://boot3.jeecg.com) | [APP](http://jeecg.com/appIndex)
 - ドキュメント：[ドキュメントセンター](http://help.jeecg.com) | [AI設定](https://help.jeecg.com/java/ai/aichat)
 - 初心者ガイド：[クイックスタート](http://www.jeecg.com/doc/quickstart) | [Q&A](http://www.jeecg.com/doc/qa) | [1分間体験](https://my.oschina.net/jeecg/blog/3083313)
-- QQグループ：964611995、⑩716488839(満)、⑨808791225(満)
+- QQグループ：716913034、964611995(满)、⑩716488839(満)、⑨808791225(満)
 
 
 
@@ -197,7 +205,7 @@ JeecgBoot AIローコードプラットフォームは、あらゆるJ2EEプロ�
 
 #### 開発環境
 
-- 言語：Java デフォルト JDK17（JDK8、JDK21もサポート）
+- 言語：Java デフォルト JDK17（JDK21、JDK24もサポート）
 
 - IDE（Java）：IDEA（lombokプラグインのインストールが必須）
 
@@ -212,19 +220,21 @@ JeecgBoot AIローコードプラットフォームは、あらゆるJ2EEプロ�
 
 #### バックエンド
 
-- 基盤フレームワーク：Spring Boot 2.7.18
+- 基盤フレームワーク：Spring Boot 4.1.0
 
-- マイクロサービスフレームワーク：Spring Cloud Alibaba 2021.0.6.2
+- マイクロサービスフレームワーク：Spring Cloud Alibaba 2025.1.0.0
 
-- 永続化レイヤーフレームワーク：MybatisPlus 3.5.3.2
+- 永続化レイヤーフレームワーク：MybatisPlus 3.5.16
 
-- レポートツール：JimuReport 1.9.5
+- レポートツール：JimuReport 2.5.1
 
-- セキュリティフレームワーク：Apache Shiro 1.13.0、Jwt 4.5.0
+- 大画面デザイン：JimuBI v2.5.0
+
+- セキュリティフレームワーク：Apache Shiro 3.0.0、Jwt 4.5.0
 
 - マイクロサービス技術スタック：Spring Cloud Alibaba、Nacos、Gateway、Sentinel、Skywalking
 
-- データベース接続プール：Alibaba Druid 1.1.24
+- データベース接続プール：Alibaba Druid 1.2.28
 
 - ログ出力：logback
 
@@ -233,14 +243,14 @@ JeecgBoot AIローコードプラットフォームは、あらゆるJ2EEプロ�
 
 #### フロントエンド
 
-- 技術スタック：`Vue3.0+TypeScript+Vite+AntDesignVue+pinia+echarts`
+- 技術スタック：`Vue3.0+TypeScript+Vite8+AntDesignVue4+pinia+echarts`
 
 #### フロントエンド環境要件
 
 *    `Node.js、npm、pnpm`
 *   pnpm `v9+` が必要です。
-*   Node.js 推奨バージョン：`v20.15.0`
- ` （Vite6以降、Node.js 18/20以上が必要です）`
+*   Node.js 推奨バージョン：`v20.19.0`
+ ` （Vite 8以降、EOLのNode.js 18はサポートされません。Node.js 20.19+または22.12+が必要です）`
  
 
 #### 対応データベース

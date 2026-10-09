@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-JeecgBoot 3.9.2 — a Java low-code development platform built on **Spring Boot 3.5.5**, **Java 17** (also supports 21, 24). It runs as a monolithic app by default, with an optional Spring Cloud microservices mode. Uses `jakarta` namespace (not `javax`) throughout.
+JeecgBoot 3.9.5 — a Java low-code development platform built on **Spring Boot 4.1.0**, **Java 17** (also supports 21, 24). It runs as a monolithic app by default, with an optional Spring Cloud microservices mode. Uses `jakarta` namespace (not `javax`) throughout.
 
 ## Build & Run Commands
 
@@ -65,22 +65,22 @@ jeecg-boot-parent (root pom)
 ```
 
 Optional microservices modules (activated via `-P SpringCloud`):
-- `jeecg-server-cloud/` — Gateway (port 9999), Nacos (8848), cloud service starters, monitoring (9111), XXL-Job (9080), Sentinel (9000)
+- `jeecg-server-cloud/` — Gateway (port 9999), Nacos (8848/18080), cloud service starters, monitoring (9111), XXL-Job (9080), Sentinel (9000)
 
 ## Key Technology Stack
 
 | Layer | Technology |
 |-------|-----------|
-| ORM | MyBatis-Plus 3.5.12 (`BaseMapper<T>`, `ServiceImpl<M,T>`) |
-| Auth | Apache Shiro 2.0.5 + JWT 4.5.0, Redis-backed sessions |
-| DB Pool | Druid 1.2.24 with dynamic datasource support |
+| ORM | MyBatis-Plus 3.5.16 (`BaseMapper<T>`, `ServiceImpl<M,T>`) |
+| Auth | Apache Shiro 3.0.0 + JWT 4.5.0, Redis-backed sessions |
+| DB Pool | Druid 1.2.28 with dynamic datasource support |
 | DB Migration | Flyway (scripts in `jeecg-system-start/src/main/resources/flyway/sql/mysql/`) |
 | JSON | FastJSON 2 |
 | Excel | AutoPoi (`autopoi-spring-boot-3-starter`) |
 | API Docs | Knife4j 4.5.0 (OpenAPI v3, `@Schema` annotations) |
 | Scheduled Jobs | Quartz (JDBC store, clustered) |
 | File Storage | MinIO / Aliyun OSS / Qiniu (controlled by `jeecg.uploadType` config) |
-| Microservices | Spring Cloud 2025.0.0 + Alibaba (Nacos, Gateway, Sentinel) |
+| Microservices | Spring Cloud 2025.1.0.0 + Alibaba (Nacos, Gateway, Sentinel) |
 
 ## Code Conventions & Patterns
 
@@ -99,20 +99,6 @@ Optional microservices modules (activated via `-P SpringCloud`):
 **Auto query building:** `QueryGenerator.initQueryWrapper(entity, request.getParameterMap())` auto-builds `QueryWrapper` from HTTP request params, supporting fuzzy match, range queries, etc.
 
 **Monolithic ↔ Microservices switch:** The `jeecg-system-api` module has two implementations (`local-api` for direct calls, `cloud-api` for Feign). Switching is done by changing the dependency in the startup module, not by modifying business code.
-
-**代码修改痕迹日志：** 所有新增或修改的代码块必须用 `update-begin` / `update-end` 注释包裹，格式如下：
-
-```java
-//update-begin---author:作者 ---date:YYYY-MM-DD  for：【bug号/需求号】修改说明-----------
-// 新增或修改的代码
-//update-end---author:作者 ---date:YYYY-MM-DD  for：【bug号/需求号】修改说明-----------
-```
-
-规则：
-- `author` 填实际修改人，`date` 填修改日期（格式 `YYYY-MM-DD`），`for` 填 bug 号或需求号 + 简要说明
-- 新增方法：`update-begin` 放在方法声明前，`update-end` 放在方法结束 `}` 后
-- 修改已有方法中的代码：`update-begin` / `update-end` 只包裹被修改的代码段，不包裹整个方法
-- 用户未提供 bug 号时，需要主动询问
 
 ## Database
 

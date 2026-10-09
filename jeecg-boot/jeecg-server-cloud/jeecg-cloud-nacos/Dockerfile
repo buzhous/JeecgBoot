@@ -18,8 +18,9 @@ RUN mkdir -p /jeecg-cloud-nacos
 
 WORKDIR /jeecg-cloud-nacos
 
-EXPOSE 8848
+EXPOSE 8848 18080
 
-ADD ./target/jeecg-cloud-nacos-3.9.2.jar ./
+ADD ./target/jeecg-cloud-nacos-3.9.5.jar ./
 
-CMD sleep 30 && exec java -Djava.security.egd=file:/dev/./urandom -jar jeecg-cloud-nacos-3.9.2.jar
+# 去掉sleep 30，容器启动后立即拉起应用（MySQL就绪由docker-compose的healthcheck+depends_on: service_healthy保证）
+CMD exec java -Djava.security.egd=file:/dev/./urandom -jar jeecg-cloud-nacos-3.9.5.jar

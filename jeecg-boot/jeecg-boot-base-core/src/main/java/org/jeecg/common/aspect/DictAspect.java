@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -119,6 +120,12 @@ public class DictAspect {
                             continue;
                         }
                         //update-begin---author:scott ---date:2026-04-16  for：【issues/9543】优先通过 getter 方法读取字段值（兼容实体重写 getter 的场景），getter 不存在时 fallback 到直接读字段-----------
+                        //update-begin---author:scott ---date:20260911  for：【安全修复 GHSA-7wcq-939v-pcrg】字典翻译切面用反射重建响应体会绕过序列化注解，此处尊重 @JsonProperty(WRITE_ONLY) 语义，跳过敏感字段（如 SysDataSource.dbPassword）防止泄露-----------
+                        JsonProperty jsonProperty = field.getAnnotation(JsonProperty.class);
+                        if (jsonProperty != null && JsonProperty.Access.WRITE_ONLY == jsonProperty.access()) {
+                        	continue;
+                        }
+                        //update-end---author:scott ---date:20260911  for：【安全修复 GHSA-7wcq-939v-pcrg】字典翻译切面用反射重建响应体会绕过序列化注解，此处尊重 @JsonProperty(WRITE_ONLY) 语义，跳过敏感字段（如 SysDataSource.dbPassword）防止泄露-----------
                         Object fieldValue = getFieldValue(record, field);
                         //update-end---author:scott ---date:2026-04-16  for：【issues/9543】优先通过 getter 方法读取字段值（兼容实体重写 getter 的场景），getter 不存在时 fallback 到直接读字段-----------
                         // 解决@JsonFormat注解解析不了的问题详见SysAnnouncement类的@JsonFormat

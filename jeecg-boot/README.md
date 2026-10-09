@@ -1,12 +1,12 @@
 JeecgBoot 低代码开发平台
 ===============
 
-当前最新版本： 3.9.2（2026-04-30） 
+当前最新版本： 3.9.5（2026-08-27） 
 
 
 [![AUR](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/zhangdaiscott/jeecg-boot/blob/master/LICENSE)
 [![](https://img.shields.io/badge/Author-北京国炬软件-orange.svg)](http://jeecg.com/aboutusIndex)
-[![](https://img.shields.io/badge/version-3.9.2-brightgreen.svg)](https://github.com/zhangdaiscott/jeecg-boot)
+[![](https://img.shields.io/badge/version-3.9.5-brightgreen.svg)](https://github.com/zhangdaiscott/jeecg-boot)
 [![GitHub stars](https://img.shields.io/github/stars/zhangdaiscott/jeecg-boot.svg?style=social&label=Stars)](https://github.com/zhangdaiscott/jeecg-boot)
 [![GitHub forks](https://img.shields.io/github/forks/zhangdaiscott/jeecg-boot.svg?style=social&label=Fork)](https://github.com/zhangdaiscott/jeecg-boot)
 
@@ -18,7 +18,7 @@ JeecgBoot 低代码开发平台
 <h3 align="center">企业级AI低代码平台</h3>
 
 JeecgBoot 是一款基于BPM流程和代码生成的AI低代码平台，助力企业快速实现低代码开发和构建AI应用。
-采用前后端分离架构（Ant Design&Vue3，SpringBoot3，SpringCloud Alibaba，Mybatis-plus），强大代码生成器实现前后端一键生成，无需手写代码。
+采用前后端分离架构（Ant Design&Vue3，SpringBoot4，SpringCloud Alibaba，Mybatis-plus），强大代码生成器实现前后端一键生成，无需手写代码。
 平台引领AI低代码开发模式：AI生成→在线编码→代码生成→手工合并，解决Java项目80%重复工作，提升效率，节省成本，兼顾灵活性。
 具备强大且颗粒化的权限控制，支持按钮权限和数据权限设置，满足大型业务系统需求。功能涵盖在线表单、表单设计、流程设计、门户设计、报表与大屏设计、OA办公、AI应用、AI知识库、大模型管理、AI流程编排、AI聊天，支持ChatGPT、DeepSeek、Ollama等多种AI大模型。
 
@@ -85,8 +85,8 @@ JeecgBoot低代码平台兼容所有J2EE项目开发，支持信创国产化，�
 
 | 项目名              | 说明                                                                 | 
 |------------------|--------------------------------------------------------------------|
-| `jeecg-boot`     | 后端源码JAVA（SpringBoot3微服务架构）                                         |
-| `jeecgboot-vue3` | 前端源码VUE3（vue3+vite6+antd4+ts最新技术栈）                                 |
+| `jeecg-boot`     | 后端源码JAVA（SpringBoot4微服务架构）                                         |
+| `jeecgboot-vue3` | 前端源码VUE3（vue3+vite8+antd4+ts最新技术栈）                                 |
 
 
 
@@ -109,7 +109,7 @@ JeecgBoot低代码平台兼容所有J2EE项目开发，支持信创国产化，�
 - 在线演示：  [平台演示](https://boot3.jeecg.com) | [APP演示](https://jeecg.com/appIndex)
 - 入门指南：  [快速入门](http://www.jeecg.com/doc/quickstart)  | [代码生成使用](https://help.jeecg.com/java/codegen/online) | [开发文档](https://help.jeecg.com)  | [AI应用手册](https://help.jeecg.com/aigc) | [视频教程](http://jeecg.com/doc/video)
 - 技术支持：  [反馈问题](https://github.com/jeecgboot/JeecgBoot/issues/new?template=bug_report.md)    | [低代码体验一分钟](https://jeecg.blog.csdn.net/article/details/106079007)
-- QQ交流群 ： 964611995、⑩716488839(满)、⑨808791225(满)、其他(满)
+- QQ交流群 ： 716913034、964611995(满)、⑩716488839(满)、⑨808791225(满)、其他(满)
 
 
 AI 应用平台介绍
@@ -129,8 +129,8 @@ JeecgBoot平台提供了一套完善的AI应用管理系统模块，是一套类
 
 为什么选择JeecgBoot?
 -----------------------------------
-- 1.采用最新主流前后分离框架（Spring Boot3 + MyBatis + Shiro/SpringAuthorizationServer + Ant Design4 + Vue3），容易上手；代码生成器依赖性低，灵活的扩展能力，可快速实现二次开发。
-- 2.前端大版本换代，最新版采用 Vue3.0 + TypeScript + Vite6 + Ant Design Vue4 等新技术方案。
+- 1.采用最新主流前后分离框架（Spring Boot 4 + MyBatis + Shiro/SpringAuthorizationServer + Ant Design4 + Vue3），容易上手；代码生成器依赖性低，灵活的扩展能力，可快速实现二次开发。
+- 2.前端大版本换代，最新版采用 Vue3.0 + TypeScript + Vite8 + Ant Design Vue4 等新技术方案。
 - 3.支持微服务Spring Cloud Alibaba（Nacos、Gateway、Sentinel、Skywalking），提供简易机制，支持单体和微服务自由切换（这样可以满足各类项目需求）。
 - 4.开发效率高，支持在线建表和AI建表，提供强大代码生成器，单表、树列表、一对多、一对一等数据模型，增删改查功能一键生成，菜单配置直接使用。
 - 5.代码生成器提供强大模板机制，支持自定义模板，目前提供四套风格模板（单表两套、树模型一套、一对多三套）。
@@ -183,13 +183,14 @@ JeecgBoot平台提供了一套完善的AI应用管理系统模块，是一套类
 - IDE建议： IDEA (必须安装lombok插件 )
 - 语言：Java 默认jdk17(jdk21、jdk24)
 - 依赖管理：Maven
-- 基础框架：Spring Boot 3.5.5
-- 微服务框架： Spring Cloud Alibaba 2023.0.3.3
-- 持久层框架：MybatisPlus 3.5.12
-- 报表工具： JimuReport 2.1.3
-- 安全框架：Apache Shiro 2.0.4，Jwt 4.5.0
+- 基础框架：Spring Boot 4.1.0
+- 微服务框架： Spring Cloud Alibaba 2025.1.0.0
+- 持久层框架：MybatisPlus 3.5.16
+- 报表工具： JimuReport 2.5.1
+- 大屏设计： JimuBI v2.5.0
+- 安全框架：Apache Shiro 3.0.0，Jwt 4.5.0
 - 微服务技术栈：Spring Cloud Alibaba、Nacos、Gateway、Sentinel、Skywalking
-- 数据库连接池：阿里巴巴Druid 1.2.24
+- 数据库连接池：阿里巴巴Druid 1.2.28
 - AI大模型：支持 `ChatGPT` `DeepSeek` `千问`等各种常规模式
 - 日志打印：logback
 - 缓存：Redis
@@ -205,8 +206,8 @@ JeecgBoot平台提供了一套完善的AI应用管理系统模块，是一套类
 
 - 依赖管理：node、npm、pnpm
 - 前端IDE建议：IDEA、WebStorm、Vscode
-- 采用 Vue3.0+TypeScript+Vite6+Ant-Design-Vue4等新技术方案，包括二次封装组件、utils、hooks、动态菜单、权限校验、按钮级别权限控制等功能
-- 最新技术栈：Vue3.0 + TypeScript + Vite6 + ant-design-vue4 + pinia + echarts + unocss + vxe-table + qiankun + es6
+- 采用 Vue3.0+TypeScript+Vite8+Ant-Design-Vue4等新技术方案，包括二次封装组件、utils、hooks、动态菜单、权限校验、按钮级别权限控制等功能
+- 最新技术栈：Vue3.0 + TypeScript + Vite8 + ant-design-vue4 + pinia + echarts + unocss + vxe-table + qiankun + es6
 
 
 
@@ -264,7 +265,7 @@ JeecgBoot平台提供了一套完善的AI应用管理系统模块，是一套类
 │  │  │  ├─jeecg-system-local-api   System模块对外提供的单体接口
 │  ├─jeecg-server-cloud           --微服务模块
      ├─jeecg-cloud-gateway       --微服务网关模块(9999)
-     ├─jeecg-cloud-nacos       --Nacos服务模块(8848)
+     ├─jeecg-cloud-nacos       --Nacos服务模块(服务:8848, 控制台:18080)
      ├─jeecg-system-cloud-start  --System微服务启动项目(7001)
      ├─jeecg-demo-cloud-start    --Demo微服务启动项目(7002)
      ├─jeecg-visual

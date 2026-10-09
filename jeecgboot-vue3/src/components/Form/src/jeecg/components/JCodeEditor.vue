@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, onMounted, reactive, ref, watch, unref, computed } from 'vue';
+  import { defineComponent, onMounted, reactive, ref, watch, unref, computed, nextTick } from 'vue';
   import { propTypes } from '/@/utils/propTypes';
   import { useRuleFormItem } from '/@/hooks/component/useFormItem';
   // 引入全局实例
@@ -73,7 +73,7 @@
       // 代码提示
       keywords: propTypes.array.def([]),
     },
-    emits: ['change', 'update:value'],
+    emits: ['change', 'update:value', 'ready'],
     setup(props, { emit }) {
       const { getDarkMode } = useRootSetting();
       const containerRef = ref(null);
@@ -161,6 +161,8 @@
         // 代码逻辑说明: 【QQYUN-8473】代码编辑器首次加载会有遮挡
         setTimeout(() => {
           refresh();
+          // 初始化 + refresh 全部完成后通知父组件
+          emit('ready');
         }, 150);
       });
 
@@ -171,8 +173,15 @@
        */
       function setValue(value: string, trigger = true) {
         if (value && isJsonObjectString(value)) {
-          value = JSON.stringify(JSON.parse(value), null, 2);
+          // update-begin--author:liaozhiyang---date:20260617---for:【issues/9699】JS增强写错了之后页面报错
+          // isJsonObjectString 仅判断首尾字符，无法保证合法 JSON；解析失败时保留原值，避免非 JSON 内容（如 JS 增强代码）打开时报错卡死
+          try {
+            value = JSON.stringify(JSON.parse(value), null, 2);
+          } catch (e) {
+            // 非合法 JSON，按原文本展示
+          }
         }
+        // update-end--author:liaozhiyang---date:20260617---for:【issues/9699】JS增强写错了之后页面报错
         coder?.setValue(value ?? '');
         innerValue = value;
         trigger && emitChange(innerValue);
@@ -214,6 +223,11 @@
       // 切换全屏状态
       function onToggleFullScreen() {
         isFullScreen.value = !isFullScreen.value;
+        // update-begin--author:liaozhiyang---date:20260713---for:【LHZP-236】onlinejs增强查看历史里面的数据，放大查看，内容无法滚动
+        nextTick(() => {
+          setTimeout(() => refresh(), 100);
+        });
+        // update-end--author:liaozhiyang---date:20260713---for:【LHZP-236】onlinejs增强查看历史里面的数据，放大查看，内容无法滚动
       }
 
       // 代码逻辑说明: codeEditor禁用功能
@@ -335,7 +349,9 @@
 
         .full-screen-child,
         .CodeMirror {
-          height: 100%;
+          // update-begin--author:liaozhiyang---date:20260713---for:【LHZP-236】onlinejs增强查看历史里面的数据，放大查看，内容无法滚动
+          height: 100% !important;
+          // update-end--author:liaozhiyang---date:20260713---for:【LHZP-236】onlinejs增强查看历史里面的数据，放大查看，内容无法滚动
           max-height: 100%;
           min-height: 100%;
         }

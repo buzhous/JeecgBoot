@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -84,8 +85,9 @@ public class SysDataSource {
     /**
      * 密码
      */
-    @Excel(name = "密码", width = 15)
+    // 密码为敏感凭据，不参与Excel导出（同SysUser.password处理），编辑时密码留空表示不修改
     @Schema(description = "密码")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private java.lang.String dbPassword;
     /**
      * 创建人

@@ -162,7 +162,7 @@ public class AiragMcpController extends JeecgController<AiragMcp, IAiragMcpServi
      * @return
      */
     @Operation(summary = "MCP-通过id查询")
-    //@RequiresPermissions("airag:mcp:queryById")
+    @RequiresPermissions("airag:mcp:queryById")
     @GetMapping(value = "/queryById")
     public Result<AiragMcp> queryById(@RequestParam(name = "id", required = true) String id) {
         AiragMcp airagMcp = airagMcpService.getById(id);

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.constant.CommonConstant;
@@ -47,6 +48,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 	//@AutoLog(value = "airag_prompts-分页列表查询")
 	@Operation(summary="airag_prompts-分页列表查询")
 	@GetMapping(value = "/list")
+	@RequiresPermissions("airag:prompts:list")
 	public Result<IPage<AiragPrompts>> queryPageList(AiragPrompts airagPrompts,
 								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
 								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -56,7 +58,29 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 		IPage<AiragPrompts> pageList = airagPromptsService.page(page, queryWrapper);
 		return Result.OK(pageList);
 	}
-	
+	/**
+	 * 分页列表查询
+	 *
+	 * @param airagPrompts
+	 * @param pageNo
+	 * @param pageSize
+	 * @param req
+	 * @return
+	 */
+	@Operation(summary="airag_prompts-回收站分页列表查询")
+	@GetMapping(value = "/recycleBinList")
+	@RequiresPermissions("airag:prompts:recycleBinList")
+	//update-begin---author:chenrui ---date:2026-04-07  for：【QQYUN-14643】修复回收站查询逻辑，绕过@TableLogic过滤-----------
+	public Result<IPage<AiragPrompts>> recycleBinList(AiragPrompts airagPrompts,
+								   @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
+								   @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+								   HttpServletRequest req) {
+		Page<AiragPrompts> page = new Page<>(pageNo, pageSize);
+		IPage<AiragPrompts> pageList = airagPromptsService.recycleBinPage(page);
+		return Result.OK(pageList);
+	}
+	//update-end---author:chenrui ---date:2026-04-07  for：【QQYUN-14643】修复回收站查询逻辑，绕过@TableLogic过滤-----------
+
 	/**
 	 *   添加
 	 *
@@ -66,6 +90,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 	@AutoLog(value = "airag_prompts-添加")
 	@Operation(summary="airag_prompts-添加")
 	@PostMapping(value = "/add")
+	@RequiresPermissions("airag:prompts:add")
 	public Result<String> add(@RequestBody AiragPrompts airagPrompts) {
 		airagPrompts.setDelFlag(CommonConstant.DEL_FLAG_0);
 		airagPrompts.setStatus("0");
@@ -82,6 +107,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 	@AutoLog(value = "airag_prompts-编辑")
 	@Operation(summary="airag_prompts-编辑")
 	@RequestMapping(value = "/edit", method = {RequestMethod.PUT,RequestMethod.POST})
+	@RequiresPermissions("airag:prompts:edit")
 	public Result<String> edit(@RequestBody AiragPrompts airagPrompts) {
 		airagPromptsService.updateById(airagPrompts);
 		return Result.OK("编辑成功!");
@@ -96,6 +122,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 	@AutoLog(value = "airag_prompts-通过id删除")
 	@Operation(summary="airag_prompts-通过id删除")
 	@DeleteMapping(value = "/delete")
+	@RequiresPermissions("airag:prompts:delete")
 	public Result<String> delete(@RequestParam(name="id",required=true) String id) {
 		airagPromptsService.removeById(id);
 		return Result.OK("删除成功!");
@@ -110,6 +137,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 	@AutoLog(value = "airag_prompts-批量删除")
 	@Operation(summary="airag_prompts-批量删除")
 	@DeleteMapping(value = "/deleteBatch")
+	@RequiresPermissions("airag:prompts:deleteBatch")
 	public Result<String> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
 		this.airagPromptsService.removeByIds(Arrays.asList(ids.split(",")));
 		return Result.OK("批量删除成功!");
@@ -124,6 +152,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 	//@AutoLog(value = "airag_prompts-通过id查询")
 	@Operation(summary="airag_prompts-通过id查询")
 	@GetMapping(value = "/queryById")
+	@RequiresPermissions("airag:prompts:queryById")
 	public Result<AiragPrompts> queryById(@RequestParam(name="id",required=true) String id) {
 		AiragPrompts airagPrompts = airagPromptsService.getById(id);
 		if(airagPrompts==null) {
@@ -131,6 +160,27 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 		}
 		return Result.OK(airagPrompts);
 	}
+
+	 /**
+	  * 从回收站取回（支持多个id，逗号分割）
+	  */
+	 @Operation(summary = "提示词-从回收站取回")
+	 @PutMapping(value = "/revertRecycleBin")
+	 @RequiresPermissions("airag:prompts:revertRecycleBin")
+	 public Result<?> revertRecycleBin(@RequestParam(name = "ids", required = true) String ids) {
+		 airagPromptsService.revertRecycleBin(Arrays.asList(ids.split(",")));
+		 return Result.OK("已从回收站取回!");
+	 }
+	 /**
+	  * 从回收站彻底删除（支持多个id，逗号分割）
+	  */
+	 @Operation(summary = "提示词-从回收站彻底删除")
+	 @DeleteMapping(value = "/deleteRecycleBin")
+	 @RequiresPermissions("airag:prompts:deleteRecycleBin")
+	 public Result<?> deleteRecycleBin(@RequestParam(name = "ids", required = true) String ids) {
+		 airagPromptsService.deleteRecycleBin(Arrays.asList(ids.split(",")));
+		 return Result.OK("从回收站彻底删除!");
+	 }
 	 /**
 	  * 构造器调试
 	  *
@@ -138,6 +188,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
 	  * @return
 	  */
 	 @PostMapping(value = "/experiment")
+	 @RequiresPermissions("airag:prompts:experiment")
 	 public Result<?> promptExperiment(@RequestBody AiragExperimentVo experimentVo, HttpServletRequest request) {
 		 return airagPromptsService.promptExperiment(experimentVo,request);
 	 }
@@ -148,6 +199,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
     * @param airagPrompts
     */
     @RequestMapping(value = "/exportXls")
+    @RequiresPermissions("airag:prompts:exportXls")
     public ModelAndView exportXls(HttpServletRequest request, AiragPrompts airagPrompts) {
         return super.exportXls(request, airagPrompts, AiragPrompts.class, "airag_prompts");
     }
@@ -160,6 +212,7 @@ public class AiragPromptsController extends JeecgController<AiragPrompts, IAirag
     * @return
     */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+    @RequiresPermissions("airag:prompts:importExcel")
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, AiragPrompts.class);
     }

@@ -33,33 +33,23 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
 
   const serverOptions: Recordable = {}
 
-  // ----- [begin] 【JEECG作为乾坤子应用】 -----
+  // JEECG 作为乾坤子应用时，需要开启跨域并指定 origin
   const {VITE_GLOB_QIANKUN_MICRO_APP_NAME, VITE_GLOB_QIANKUN_MICRO_APP_ENTRY} = viteEnv;
   const isQiankunMicro = VITE_GLOB_QIANKUN_MICRO_APP_NAME != null && VITE_GLOB_QIANKUN_MICRO_APP_NAME !== '';
   if (isQiankunMicro && !isBuild) {
     serverOptions.cors = true;
     serverOptions.origin = VITE_GLOB_QIANKUN_MICRO_APP_ENTRY!.split('/').slice(0, 3).join('/');
   }
-  // ----- [end] 【JEECG作为乾坤子应用】 -----
-  
+
   console.log('[init] Start Port: ', VITE_PORT);
   console.debug('[init] Vite Proxy Config: ', VITE_PROXY);
-  
-  
+
   return {
     base: isQiankunMicro ? VITE_GLOB_QIANKUN_MICRO_APP_ENTRY : VITE_PUBLIC_PATH,
     root,
     resolve: {
       alias: [
-        // @logicflow/vue-node-registry 1.1.13 的 npm 包只发布了 src/，但 package.json
-        // main/module 指向 lib/、es/（不存在）。vite 6 esbuild 宽松能找到 src，rolldown 严格直接报错。
-        // 暂时直接把 import 重定向到 src/index.ts。
-        {
-          find: /^@logicflow\/vue-node-registry$/,
-          replacement: pathResolve('node_modules/@logicflow/vue-node-registry/src/index.ts'),
-        },
-        // 把 @rys-fe/vite-plugin-theme 的客户端运行时重定向到项目内置版本（vite 8 适配）
-        // 用 RegExp 精确匹配，避免被父级别名误吞；不写后缀让 vite 自动用 resolve.extensions 补全
+        // 将 @rys-fe/vite-plugin-theme 客户端运行时重定向到内置版本（vite 8 适配），用 RegExp 精确匹配避免被父级别名误吞
         {
           find: /^@rys-fe\/vite-plugin-theme\/es\/client$/,
           replacement: pathResolve('build/vite/plugin/theme-plugin/client/client'),
@@ -76,26 +66,19 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
           find: 'vue-i18n',
           replacement: 'vue-i18n/dist/vue-i18n.cjs.js',
         },
-        // /@/xxxx => src/xxxx
+        // /@/xxxx、@/xxxx => src/xxxx
         {
-          find: /\/@\//,
+          find: /\/?@\//,
           replacement: pathResolve('src') + '/',
         },
-        // /#/xxxx => types/xxxx
+        // /#/xxxx、#/xxxx => types/xxxx
         {
-          find: /\/#\//,
-          replacement: pathResolve('types') + '/',
-        },
-        {
-          find: /@\//,
-          replacement: pathResolve('src') + '/',
-        },
-        // /#/xxxx => types/xxxx
-        {
-          find: /#\//,
+          find: /\/?#\//,
           replacement: pathResolve('types') + '/',
         },
       ],
+      // 避免vue生态多份实例被重复解析/预构建，减少依赖发现和转换的开销
+      dedupe: ['vue', 'vue-router', 'pinia', '@vue/shared'],
     },
     server: {
       // Listening on all local IPs
@@ -103,49 +86,76 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
       // @ts-ignore
       https: false,
       port: VITE_PORT,
-      // Load proxy configuration from .env
       proxy: createProxy(VITE_PROXY),
-      // 合并 server 配置
       ...serverOptions,
-      // update-begin--author:liaozhiyang---date:20260306---for:【QQYUN-14801】vite启动的时候，预构建一些入口页面，访问时快一些
-      // 启动时预构建
+      // 启动时预构建部分常用入口页面，访问时更快
       warmup: {
         clientFiles: [
           './src/main.ts',
           './src/App.vue',
           './src/views/system/loginmini/MiniLogin.vue',
-          'src/layouts/default/index.vue'
+          'src/layouts/default/index.vue',
+          'src/views/dashboard/Analysis/index.vue',
+          'src/views/dashboard/workbench/index.vue',
+          'src/views/system/user/index.vue',
+          'src/views/system/role/index.vue',
+          'src/views/system/depart/index.vue',
+          'src/views/system/menu/index.vue',
+          'src/views/system/dict/index.vue',
+          'src/views/super/online/cgform/index.vue',
+          'src/views/super/online/cgform/auto/default/OnlineAutoList.vue',
+          'src/views/super/airag/aiapp/AiAppList.vue',
         ],
       },
       // update-end--author:liaozhiyang---date:20260306---for:【QQYUN-14801】vite启动的时候，预构建一些入口页面，访问时快一些
     },
     build: {
-      minify: 'esbuild',
+      // Vite 8 默认使用 Oxc minifier；'esbuild' 已 deprecated。
+      // 这里保留 minify=true 显式启用，并对 console/debugger 做 drop。
+      minify: true,
       target: 'es2015',
       cssTarget: 'chrome80',
       outDir: OUTPUT_DIR,
       rollupOptions: {
-        // 关闭除屑优化，防止删除重要代码，导致打包后功能出现异常
-        // treeshake: false,
         output: {
-          chunkFileNames: 'js/[name]-[hash].js', // 引入文件名的名称
-          entryFileNames: 'js/[name]-[hash].js', // 包的入口文件名称
-          // manualChunks配置 (依赖包从大到小排列)
-          manualChunks: {
-            // vue vue-router合并打包
-            'vue-vendor': ['vue', 'vue-router'],
-            'emoji-mart-vue-fast': ['emoji-mart-vue-fast'],
+          chunkFileNames: 'js/[name]-[hash].js',
+          entryFileNames: 'js/[name]-[hash].js',
+          // update-begin--author:copilot---date:20260711---for:【vite8升级】rolldown不再支持对象形式的manualChunks，改为函数形式
+          // 官方推荐写法：id.includes('node_modules') + split('node_modules/') 取出包名，再映射到 chunk 名（依赖包从大到小排列）
+          manualChunks(id: string) {
+            const normalizedId = id.replace(/\\/g, '/');
+            // tinymceGlobalShim 必须和 tinymce 核心/插件打进同一 chunk，保证 window.tinymce 挂载早于各 plugin/theme 顶层代码执行
+            if (normalizedId.includes('/src/utils/tinymceGlobalShim')) {
+              return 'tinymce-vendor';
+            }
+            if (!normalizedId.includes('node_modules/')) {
+              return;
+            }
+            const segments = normalizedId.split('node_modules/').pop()!.split('/');
+            const pkgName = segments[0].startsWith('@') ? `${segments[0]}/${segments[1]}` : segments[0];
+            const packageToChunk: Record<string, string> = {
+              vue: 'vue-vendor',
+              'vue-router': 'vue-vendor',
+              'emoji-mart-vue-fast': 'emoji-mart-vue-fast',
+              html2canvas: 'html2canvas-vendor',
+              'pinyin-pro': 'pinyin-pro-vendor',
+              'vue-grid-layout': 'grid-layout-vendor',
+              vuedraggable: 'vuedraggable-vendor',
+              tinymce: 'tinymce-vendor',
+              '@tinymce/tinymce-vue': 'tinymce-vendor',
+            };
+            return packageToChunk[pkgName];
           },
+          // update-end--author:copilot---date:20260711---for:【vite8升级】rolldown不再支持对象形式的manualChunks，改为函数形式
+          // Vite 8 用 Oxc 替代 esbuild；原 esbuild.drop 迁移到这里。
+          // 详见 https://oxc.rs/docs/guide/usage/minifier/dead-code-elimination
+          minify: isBuild ? { compress: { drop: ['console', 'debugger'] } } : false,
         },
       },
       // 关闭brotliSize显示可以稍微减少打包时间
       reportCompressedSize: false,
       // 提高超大静态资源警告大小
       chunkSizeWarningLimit: 2000,
-    },
-    esbuild: {
-      //清除全局的console.log和debug
-      drop: isBuild ? ['console', 'debugger'] : [],
     },
     define: {
       // setting vue-i18-next
@@ -154,6 +164,8 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
       __APP_INFO__: JSON.stringify(__APP_INFO__),
     },
     css: {
+      // warmup 并发较高时，Less worker 与主线程通信可能超过 Vite 内部超时时间
+      preprocessorMaxWorkers: 0,
       preprocessorOptions: {
         less: {
           modifyVars: generateModifyVars(),
@@ -166,18 +178,21 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
     plugins: await createVitePlugins(viteEnv, isBuild, isQiankunMicro),
 
     optimizeDeps: {
-      esbuildOptions: {
-        target: 'es2020',
+      // Vite 8 uses Rolldown for dep optimization; esbuildOptions is deprecated.
+      // See https://rolldown.rs/ for the rolldownOptions shape.
+      rolldownOptions: {
+        transform: {
+          target: 'es2020',
+        },
       },
       // @iconify/iconify: The dependency is dynamically and virtually loaded by @purge-icons/generated, so it needs to be specified explicitly
+      // vite8 显式预构建路由独有的重量级依赖，避免首次打开对应路由时因运行时才发现依赖而产生大量瀑布式请求
       include: [
-        // 强制预构建clipboard，解决Vite6对CommonJS模块的严格检查
         'clipboard',
         '@vue/shared',
         '@iconify/iconify',
         'ant-design-vue/es/locale/zh_CN',
         'ant-design-vue/es/locale/en_US',
-        // update-begin--author:scott---date:20260427---for: 集成 @jeecg/aiflow（预编译 lib 在 node_modules）时，
         // Vite 默认不扫描 node_modules 里已打包的 mjs，导致 ant-design-vue/es/vc-picker/generate/dayjs.js
         // 引入的 dayjs 插件子路径（UMD/CJS）未被预打包，运行时报 "does not provide an export named 'default'"。
         // 显式列出 vc-picker 用到的全部 dayjs 插件，强制 esbuild 预打包成 ESM。
@@ -188,7 +203,12 @@ export default async ({ command, mode }: ConfigEnv): Promise<UserConfig> => {
         'dayjs/plugin/weekOfYear',
         'dayjs/plugin/weekYear',
         'dayjs/plugin/quarterOfYear',
-        // update-end--author:scott---date:20260427---for: 集成 @jeecg/aiflow 时 dayjs 插件 default 导出报错
+        'tinymce',
+        '@tinymce/tinymce-vue',
+        'echarts',
+        'vxe-table',
+        'vxe-pc-ui',
+        'vxe-table-plugin-antd',
       ],
       exclude: [
         //升级vite4后，需要排除online和aiflow依赖

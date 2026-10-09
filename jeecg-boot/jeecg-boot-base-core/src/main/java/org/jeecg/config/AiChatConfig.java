@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 public class AiChatConfig {
 
     /**
+     * 默认聊天模型名称（用于判断是否支持Tool Calling等）
+     */
+    private String model;
+
+    /**
      * skills配置文件路径
      */
     private String skillsDir;
@@ -43,6 +48,29 @@ public class AiChatConfig {
      * AI默认向量模型
      */
     private ModelConfig aiModelEmbed = new ModelConfig();
+
+	/**
+	 * AI 聊天助手访问限流配置
+	 */
+	private RateLimitConfig rateLimit = new RateLimitConfig();
+
+	/**
+	 * AI 聊天助手访问限流参数
+	 *
+	 * @author scott
+	 * @since 2026-09-01 issues/9871 AI聊天助手访问限流配置优化
+	 */
+	@Data
+	public static class RateLimitConfig {
+		/** 每会话每分钟最多发送消息次数，为空或小于等于 0 时不限制 */
+		private Integer sendPerSessionPerMinute;
+
+		/** 每 IP 每分钟最多发送消息次数，为空或小于等于 0 时不限制 */
+		private Integer sendPerIpPerMinute;
+
+		/** 每会话每小时最多上传文件次数，为空或小于等于 0 时不限制 */
+		private Integer uploadPerSessionPerHour;
+	}
 
     @Data
     public static class ModelConfig {

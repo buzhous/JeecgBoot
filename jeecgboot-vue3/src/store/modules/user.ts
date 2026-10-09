@@ -17,7 +17,7 @@ import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
 import { useGlobSetting } from '/@/hooks/setting';
 import { JDragConfigEnum } from '/@/enums/jeecgEnum';
-import { useSso } from '/@/hooks/web/useSso';
+import { getCasServiceUrl, useSso } from '/@/hooks/web/useSso';
 import { isOAuth2AppEnv } from "/@/views/sys/login/useLogin";
 import { getUrlParam } from "@/utils";
 interface dictType {
@@ -33,10 +33,11 @@ interface UserState {
   tenantid?: string | number;
   shareTenantId?: Nullable<string | number>;
   loginInfo?: Nullable<LoginInfo>;
+  // 三级等保强密码开关
+  enableStrongPwd?: boolean;
 }
 
-export const useUserStore = defineStore({
-  id: 'app-user',
+export const useUserStore = defineStore('app-user', {
   state: (): UserState => ({
     // 用户信息
     userInfo: null,
@@ -57,6 +58,8 @@ export const useUserStore = defineStore({
     shareTenantId: null,
     //登录返回信息
     loginInfo: null,
+    // 三级等保强密码开关
+    enableStrongPwd: false,
   }),
   getters: {
     getUserInfo(): UserInfo {
@@ -89,6 +92,10 @@ export const useUserStore = defineStore({
     // 是否有分享租户id
     hasShareTenantId(): boolean {
       return this.shareTenantId != null && this.shareTenantId !== '';
+    },
+    // 三级等保强密码开关
+    getEnableStrongPwd(): boolean {
+      return this.enableStrongPwd ?? false;
     },
   },
   actions: {
@@ -213,7 +220,10 @@ export const useUserStore = defineStore({
         // 代码逻辑说明: 【issues/1102】设置单点登录后页面，进入首页提示404，也没有绘制侧边栏 #1102---
         let ticket = getUrlParam('ticket');
         if(ticket){
-          goHome && (window.location.replace((userInfo && userInfo.homePath) || PageEnum.BASE_HOME));
+          //update-begin---wangshuai---date:20260810  for：[issues/9797]开启CAS验证，回跳地址错误------------
+          // CAS 校验成功后刷新当前业务地址，避免深层链接被用户首页覆盖（issues/9797）
+          goHome && window.location.replace(getCasServiceUrl());
+          //update-end---author:wangshuai ---date:20260810  for：[issues/9797]开启CAS验证，回跳地址错误------------  
         }else{
           goHome && (await router.replace((userInfo && userInfo.homePath) || PageEnum.BASE_HOME));
         }
@@ -250,7 +260,7 @@ export const useUserStore = defineStore({
       if (!this.getToken) {
         return null;
       }
-      const { userInfo, sysAllDictItems } = await getUserInfo();
+      const { userInfo, sysAllDictItems, enableStrongPwd } = await getUserInfo();
       if (userInfo) {
         const { roles = [] } = userInfo;
         if (isArray(roles)) {
@@ -270,6 +280,7 @@ export const useUserStore = defineStore({
       if (sysAllDictItems) {
         this.setAllDictItems(sysAllDictItems);
       }
+      this.enableStrongPwd = enableStrongPwd ?? false;
       return userInfo;
     },
     /**

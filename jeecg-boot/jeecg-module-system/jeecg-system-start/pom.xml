@@ -5,7 +5,7 @@
     <parent>
         <artifactId>jeecg-module-system</artifactId>
         <groupId>org.jeecgframework.boot3</groupId>
-        <version>3.9.2</version>
+        <version>3.9.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -38,15 +38,21 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
-        
+
+
         <!-- 分库分表示例 -->
      <!--  <dependency>
            <groupId>org.jeecgframework.boot3</groupId>
            <artifactId>jeecg-cloud-test-shardingsphere</artifactId>
-           <version>3.9.2</version>
+           <version>3.9.5</version>
        </dependency>-->
     </dependencies>
 
@@ -55,6 +61,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>org.jeecg.JeecgSystemApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
